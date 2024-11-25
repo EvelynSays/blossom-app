@@ -33,7 +33,7 @@ const addPost = async (req, res) => {
 };
 
 // Delete a post
- const deletePost = async (req, res) => {
+const deletePost = async (req, res) => {
     // Check the ID is a  valid type
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ error: 'Invalid ID' });
@@ -51,7 +51,7 @@ const addPost = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ error: error.message });        
     };
- };
+};
 
 // Update a post
 const updatePost = async (req, res) => {
@@ -83,4 +83,5 @@ const updatePost = async (req, res) => {
 
 };
 
+// Continuation:: https://youtu.be/rAOuOcXz81E?t=3454
 export { getPosts, addPost, deletePost, updatePost };
