@@ -1,12 +1,16 @@
 import express from 'express';
-import { postsRoutes } from './routes/postsRoutes.js';
 import mongoose from 'mongoose';
+import { postsRoutes } from './routes/postsRoutes.js';
+import { usersRoutes } from './routes/usersRoutes.js';
+
 
 const app = express();
 
 app.use(express.json());
 
 app.use('/api/posts', postsRoutes);
+app.use('/api/users', usersRoutes);
+
 
 mongoose.connect('mongodb://localhost:27017', { dbName: 'blossom_db' } )
     .then(() => {
