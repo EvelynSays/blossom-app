@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Post from "../models/PostModel.js";
+import User from "../models/userModel.js";
 
 // Get all posts
 const getPosts = async (req, res) => {
@@ -7,6 +8,21 @@ const getPosts = async (req, res) => {
     try {
         const posts = await Post.find();
         res.status(200).json({ posts });
+
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+// Get all posts for a specific user
+const getUserPosts = async (req, res) => {
+    // Get authenticated user from the request object
+    const user = await User.findById(req.user._id);
+
+
+    try {
+        const userPosts = await Post.find({ user: user._id });
+        res.status(200).json({ userPosts });
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -24,9 +40,12 @@ const addPost = async (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     };
 
+    // Get authenticated user from the request object
+    const user = await User.findById(req.user._id);
+
     try {
-        const post = await Post.create({ title, body });
-        res.status(200).json({ success: "post created successfully", post });
+        const post = await Post.create({ user: user._id, title, body });
+        res.status(200).json({ success: "post created successfully.", post });
     } catch (error) {{
         return res.status(500).json({ error: error.message });
     }};   
@@ -36,14 +55,21 @@ const addPost = async (req, res) => {
 const deletePost = async (req, res) => {
     // Check the ID is a  valid type
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return res.status(400).json({ error: 'Invalid ID' });
+        return res.status(400).json({ error: 'Invalid ID.' });
     };
 
     // Check that the post exists
     const post = await Post.findById(req.params.id);
     if (!post) {
-        return res.status(400).json({ error: 'Post not found' });
+        return res.status(400).json({ error: 'Post not found.' });
     };
+
+    // Check the user owns the post
+    const user = await User.findById(req.user._id);
+
+    if (!post.user.equals(user._id)) {
+        return res.status(401).json({ error: 'Not authorized to delete this post.' });        
+    }
 
     try {
         await post.deleteOne();
@@ -74,6 +100,13 @@ const updatePost = async (req, res) => {
         return res.status(400).json({ error: 'Post not found' });
     };
 
+    // Check the user owns the post
+    const user = await User.findById(req.user._id);
+
+    if (!post.user.equals(user._id)) {
+        return res.status(401).json({ error: 'Not authorized to edit this post.' });        
+    }
+
     try {
         await post.updateOne({ title, body });
         res.status(200).json({ success: 'Post updated successfully' });
@@ -83,4 +116,4 @@ const updatePost = async (req, res) => {
 
 };
 
-export { getPosts, addPost, deletePost, updatePost };
+export { getPosts, getUserPosts, addPost, deletePost, updatePost };
