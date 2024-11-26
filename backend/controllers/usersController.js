@@ -1,5 +1,15 @@
 import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
+import 'dotenv/config.js';
+import jwt from 'jsonwebtoken';
+
+
+// Creating JWT
+const createToken = (_id) => {
+    return jwt.sign({ _id }, process.env.JWT_SECRET, {
+        expiresIn: '10d'
+    });
+};
 
 // Register User
 const registerUser = async (req, res) => {
@@ -22,8 +32,12 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
+        // Registering the user
         const user = await User.create({ email, password: hashedPassword });
-        res.status(200).json({ email });
+        // Create JWT
+        const token = createToken(user._id);
+        // Send the response
+        res.status(200).json({ email, token });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -50,8 +64,12 @@ const loginUser = async (req, res) => {
     if (!match) {
         return res.status(400).json({ error: 'Incorrect Password' });
     }
+
     try {
-        res.status(200).json({ email });
+        // Create JWT
+        const token = createToken(user._id);
+
+        res.status(200).json({ email, token });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
