@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Alert from "../../components/Alert";
+import { loginUser } from "../../controllers/usersController";
 
 const Login = () => {
 
@@ -13,9 +14,13 @@ const Login = () => {
     });
 
     // Handle login form submission
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        try {
+            await loginUser(formData.email, formData.password);
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
     return (
