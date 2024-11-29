@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Alert from '../../components/Alert';
+import { registerUser } from '../../controllers/usersController';
 
 const Register = () => {
     // Error State
@@ -14,9 +15,13 @@ const Register = () => {
 
 
     // Handle login form submission
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        try {
+            await registerUser(formData.email, formData.password, formData.passwordConfirm);
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
     return (
