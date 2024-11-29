@@ -13,7 +13,7 @@ const Layout = () => {
             </nav>
         </header>
 
-        <main>
+        <main className="p-4">
             <Outlet />
         </main>
     </>
