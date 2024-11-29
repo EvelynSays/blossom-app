@@ -19,7 +19,6 @@ const getUserPosts = async (req, res) => {
     // Get authenticated user from the request object
     const user = await User.findById(req.user._id);
 
-
     try {
         const userPosts = await Post.find({ user: user._id });
         res.status(200).json({ userPosts });
