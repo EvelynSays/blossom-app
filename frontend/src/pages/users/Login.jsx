@@ -1,8 +1,13 @@
-import { useState } from "react";
-import Alert from "../../components/Alert";
+import { useState, useContext } from "react";
 import { loginUser } from "../../controllers/usersController";
+import { UserContext } from "../../contexts/UserContext";
+import Alert from "../../components/Alert";
 
 const Login = () => {
+
+    // User the user context
+    const { user } = useContext(UserContext);
+    console.log(user);
 
     // Error State
     const [error, setError] = useState(null);
