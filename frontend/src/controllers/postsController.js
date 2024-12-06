@@ -1,4 +1,3 @@
-// Get All Posts
 const getPosts = async () => {
     const res = await fetch('/api/posts');
     const data = await res.json();
@@ -26,4 +25,27 @@ const getUserPosts = async () => {
     return data;
 };
 
-export { getPosts, getUserPosts };
+const createPost = async (title, body) => {
+    if (!title || !body) {
+        throw Error('All fields are required');
+    };
+
+    const res = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ title, body })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw Error(data.error);
+    };
+
+    return data;
+};
+
+export { getPosts, getUserPosts, createPost };
