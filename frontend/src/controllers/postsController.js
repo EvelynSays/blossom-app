@@ -11,7 +11,7 @@ const getPosts = async () => {
 
 const getUserPosts = async () => {
     const res = await fetch('/api/posts/user', {
-        headers:{
+        headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
     });
@@ -48,4 +48,21 @@ const createPost = async (title, body) => {
     return data;
 };
 
-export { getPosts, getUserPosts, createPost };
+const deletePost = async (_id) => {
+    const res = await fetch(`/api/posts/${_id}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw Error(data.error);
+    };
+
+    return data;
+};
+
+export { getPosts, getUserPosts, createPost, deletePost };

@@ -1,14 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import { getUserPosts } from "../../controllers/postsController";
+import { deletePost, getUserPosts } from "../../controllers/postsController";
 import { UserContext } from "../../contexts/UserContext";
 import Post from "../../components/Post";
 import { Link } from "react-router-dom";
+import Alert from "../../components/Alert";
+import Success from "../../components/Success";
 
 const Dashboard = () => {
 
     const { user, setUser } = useContext(UserContext);
 
     const [ loading, setLoading ] = useState(true);
+    const [ error, setError ] = useState(null);
+    const [ success, setSuccess ] = useState(null);
 
     useEffect(() => {
         setTimeout(async () => {
@@ -18,8 +22,16 @@ const Dashboard = () => {
         }, 500);
     }, []);
 
-    const handleDelete = (id) => {
-        console.log(id);
+    const handleDelete = async (_id) => {
+        try {
+            const data = await deletePost(_id);
+            setSuccess(data.success);
+        } catch (error) {
+            setError(error.message);
+        }
+
+        const newPosts = user.posts.filter(post => post._id !== _id);
+        setUser({ ...user, posts: newPosts });
     };
 
     return (
@@ -28,8 +40,11 @@ const Dashboard = () => {
             <h1 className="title">Dashboard</h1>
 
             {loading && (
-                <i class="fa-solid fa-spinner animate-spin text-3xl text-center block"></i>
+                <i className="fa-solid fa-spinner animate-spin text-3xl text-center block"></i>
             )}
+
+            {success && <Success msg={success} />}
+            {error && <Alert msg={success} />}
 
             {user.posts && user.posts.map(post => (
                 <div key={post._id}>
