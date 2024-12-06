@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../controllers/usersController";
 import { UserContext } from "../../contexts/UserContext";
 import Alert from "../../components/Alert";
@@ -6,8 +7,10 @@ import Alert from "../../components/Alert";
 const Login = () => {
 
     // User the user context
-    const { user } = useContext(UserContext);
-    console.log(user);
+    const { setUser } = useContext(UserContext);
+
+    // Use navigate hook
+    const navigate = useNavigate();
 
     // Error State
     const [error, setError] = useState(null);
@@ -22,7 +25,12 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
+            // Login the user
             await loginUser(formData.email, formData.password);
+            // Update the user state
+            setUser({email: formData.email, posts: []});
+            // Navigate to dashboard
+            navigate('/dashboard');
         } catch (error) {
             setError(error.message);
         }

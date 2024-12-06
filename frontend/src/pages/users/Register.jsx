@@ -1,8 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/Alert';
 import { registerUser } from '../../controllers/usersController';
+import { UserContext } from "../../contexts/UserContext";
 
 const Register = () => {
+    // Use user context
+    const { setUser } = useContext(UserContext);
+
+        // Use navigate hook
+        const navigate = useNavigate();
+
     // Error State
     const [error, setError] = useState(null);
 
@@ -18,7 +26,12 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
+            // Register the user
             await registerUser(formData.email, formData.password, formData.passwordConfirm);
+            // Update the user state
+            setUser({email: formData.email, posts: []});
+            // Navigate to dashboard
+            navigate('/dashboard');
         } catch (error) {
             setError(error.message);
         }
