@@ -52,6 +52,7 @@ const Dashboard = () => {
                         <div className="flex items-center gap-2">
                             <Link className="fa-solid fa-pen-to-square nav-link text-green-500 hover:bg-green-200"
                                 title="Update"
+                                state={post}
                                 to="/update"></Link>
                             <button className="fa-solid fa-trash-can nav-link text-red-500 hover:bg-red-200"
                                 title="Delete"
