@@ -5,11 +5,9 @@ import Post from "../../components/Post";
 
 const Home = () => {
     const { posts, setPosts } = useContext(PostContext);
-
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         setTimeout(async () => {
             const data = await getPosts();
             setPosts(data.posts);
@@ -22,11 +20,11 @@ const Home = () => {
             <h1 className="title">Latest Posts</h1>
 
             {loading && (
-                <i class="fa-solid fa-spinner animate-spin text-3xl text-center block"></i>
+                <i className="fa-solid fa-spinner animate-spin text-3xl text-center block"></i>
             )}
 
             {posts && posts.map(post =>
-                <div key={post._id} className="card">
+                <div key={post._id}>
                     <Post post={post} />
                 </div>
             )}

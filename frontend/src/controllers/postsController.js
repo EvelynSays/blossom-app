@@ -65,4 +65,25 @@ const deletePost = async (_id) => {
     return data;
 };
 
-export { getPosts, getUserPosts, createPost, deletePost };
+const updatePost = async (_id, title, body) => {
+    if (!title || !body) {
+        throw Error('All fields are required');
+    };
+
+    const res = await fetch(`/api/posts/${_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ title, body })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw Error(data.error);
+    };
+};
+
+export { getPosts, getUserPosts, createPost, deletePost, updatePost };

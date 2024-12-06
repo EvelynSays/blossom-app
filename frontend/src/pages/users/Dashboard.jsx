@@ -10,9 +10,9 @@ const Dashboard = () => {
 
     const { user, setUser } = useContext(UserContext);
 
-    const [ loading, setLoading ] = useState(true);
-    const [ error, setError ] = useState(null);
-    const [ success, setSuccess ] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     useEffect(() => {
         setTimeout(async () => {
@@ -23,12 +23,14 @@ const Dashboard = () => {
     }, []);
 
     const handleDelete = async (_id) => {
-        try {
-            const data = await deletePost(_id);
-            setSuccess(data.success);
-        } catch (error) {
-            setError(error.message);
-        }
+        if (confirm('Are you sure you want to delete this post?')) {
+            try {
+                const data = await deletePost(_id);
+                setSuccess(data.success);
+            } catch (error) {
+                setError(error.message);
+            }
+        };
 
         const newPosts = user.posts.filter(post => post._id !== _id);
         setUser({ ...user, posts: newPosts });

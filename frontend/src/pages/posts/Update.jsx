@@ -1,30 +1,29 @@
 import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createPost } from "../../controllers/postsController";
+import { updatePost } from "../../controllers/postsController";
 import { PostContext } from "../../contexts/PostContext";
 import Alert from "../../components/Alert";
 
 const Update = () => {
-
-    const { state } = useLocation();
-    const [error, setError] = useState();
-
-    const [formData, setFormData] = useState({ title: state.title, body: state.body });
     const { posts, setPosts } = useContext(PostContext);
-
     const navigate = useNavigate();
+    const { state } = useLocation();
+
+    const [error, setError] = useState();
+    const [formData, setFormData] = useState({ title: state.title, body: state.body });
+
 
     const handleUpdate = async (e) => {
         e.preventDefault();
 
-        /*         try {
-                    const data = await createPost(formData.title, formData.body);
-                    setPosts([...posts, data]);
-                    navigate('/dashboard');
-                } catch (error) {
-                    setError(error.message);
-                    console.log(error);
-                } */
+        try {
+            const data = await updatePost(state._id, formData.title, formData.body);
+            setPosts([...posts, data]);
+            navigate('/dashboard');
+        } catch (error) {
+            setError(error.message);
+            console.log(error);
+        };
     };
 
     return (
@@ -47,7 +46,7 @@ const Update = () => {
                     value={formData.body}
                     onChange={(e) => setFormData({ ...formData, body: e.target.value })}
                 ></textarea>
-                <button className="btn">Create</button>
+                <button className="btn">Save & Post</button>
             </form>
 
             {error && < Alert msg={error} />}
