@@ -30,10 +30,11 @@ const Dashboard = () => {
             } catch (error) {
                 setError(error.message);
             }
+            const newPosts = user.posts.filter(post => post._id !== _id);
+            setUser({ ...user, posts: newPosts });
         };
 
-        const newPosts = user.posts.filter(post => post._id !== _id);
-        setUser({ ...user, posts: newPosts });
+
     };
 
     return (
